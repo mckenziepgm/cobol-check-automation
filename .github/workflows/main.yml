@@ -1,66 +1,21 @@
-# cobol-check-config.yaml
-
-cobol:
-  dialect: "ibm-enterprise"   # Options: ibm-enterprise, microfocus, gnucobol
-  encoding: "EBCDIC"          # z/OS default; can be ASCII on Windows
-  line_endings: "CRLF"        # Windows uses CRLF; z/OS uses NL implicitly
-  file_extensions:
-    - ".cbl"
-    - ".cpy"
-    - ".cob"
-
-  paths:
-    source:
-      - "src/"
-      - "copybooks/"
-    output:
-      - "out/"
-    temp:
-      - "tmp/"
-
-  syntax:
-    strict: true
-    fixed_format: true
-    column_rules:
-      indicator_area: [1]
-      area_a: [8, 11]
-      area_b: [12, 72]
-      sequence_numbers: [1, 6]
-
-  rules:
-    indentation:
-      enabled: true
-      spaces_per_indent: 4
-
-    max_line_length:
-      enabled: true
-      value: 72
-
-    perform_depth:
-      enabled: true
-      max: 3
-
-    copybook_includes:
-      validate_path: true
-
-    variable_naming:
-      pattern: "^[A-Z0-9-]+$"
-
-    stop_run_required:
-      enabled: true
-
-  platform:
-    mainframe:
-      enabled: true
-      compile_command: "IGYCRCTL"
-      jcl_template: "jcl/compile.jcl"
-    windows:
-      enabled: true
-      compiler: "MicroFocus"    # or GnuCOBOL
-      run_command: "cobc -x"
-
-  output:
-    format: "json"
-    report_path: "reports/cobol_check_report.json"
-    log_level: "info"
-
+name: COBOL Check Automation
+on:
+push:
+branches: [ main ]
+jobs:
+cobol-check:
+runs-on: ubuntu-latest
+steps:
+- uses: actions/checkout@v2
+- name: Set up Java
+uses: actions/setup-java@v2
+with:
+java-version: '11'
+- name: Run COBOL Check
+env:
+ZOWE_USERNAME: ${{ secrets.ZOWE_USERNAME }}
+ZOWE_PASSWORD: ${{ secrets.ZOWE_PASSWORD }}
+ run: |
+ # Here we'll add our commands to run cobolcheck
+ echo "Running COBOL Check"
+ # Add actual cobolcheck commands here
